@@ -1,0 +1,115 @@
+@HostAddress = http://localhost:5112
+
+###############################################################################
+# 1. COUNTRIES ENDPOINTS
+###############################################################################
+
+### 1.1 Get Countries with Pagination and Filtering
+GET {{HostAddress}}/api/countries?pageNumber=1&pageSize=5&sortBy=name&sortOrder=asc
+Accept: application/json
+
+### 1.2 Get Countries Filtered by Region and Search Query
+GET {{HostAddress}}/api/countries?search=ja&region=Asia&pageNumber=1&pageSize=10
+Accept: application/json
+
+### 1.3 Get Country by ID (includes list of cities)
+GET {{HostAddress}}/api/countries/1
+Accept: application/json
+
+### 1.4 Get Cities by Country ID with Pagination
+GET {{HostAddress}}/api/countries/1/cities?pageNumber=1&pageSize=10
+Accept: application/json
+
+### 1.5 Create Country
+POST {{HostAddress}}/api/countries
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Spain",
+  "isoCode": "ESP",
+  "region": "Europe",
+  "phoneCode": "+34",
+  "currency": "EUR",
+  "population": 47420000
+}
+
+### 1.6 Update Country
+PUT {{HostAddress}}/api/countries/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Japan (Updated)",
+  "isoCode": "JPN",
+  "region": "Asia",
+  "phoneCode": "+81",
+  "currency": "JPY",
+  "population": 125500000
+}
+
+### 1.7 Delete Country
+DELETE {{HostAddress}}/api/countries/10
+Accept: application/json
+
+
+###############################################################################
+# 2. CITIES ENDPOINTS
+###############################################################################
+
+### 2.1 Get Cities with Pagination and Filtering
+GET {{HostAddress}}/api/cities?pageNumber=1&pageSize=10&sortBy=population&sortOrder=desc
+Accept: application/json
+
+### 2.2 Get Cities Filtered by Country ID and Capital Status
+GET {{HostAddress}}/api/cities?countryId=2&isCapital=true
+Accept: application/json
+
+### 2.3 Get Cities Filtered by Search Term
+GET {{HostAddress}}/api/cities?search=Berlin
+Accept: application/json
+
+### 2.4 Get City by ID
+GET {{HostAddress}}/api/cities/1
+Accept: application/json
+
+### 2.5 Create City
+POST {{HostAddress}}/api/cities
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Kyoto North",
+  "countryId": 1,
+  "stateOrProvince": "Kansai",
+  "population": 250000,
+  "isCapital": false
+}
+
+### 2.6 Update City
+PUT {{HostAddress}}/api/cities/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Tokyo Metropolis",
+  "countryId": 1,
+  "stateOrProvince": "Kanto",
+  "population": 14000000,
+  "isCapital": true
+}
+
+### 2.7 Delete City
+DELETE {{HostAddress}}/api/cities/20
+Accept: application/json
+
+###############################################################################
+# 3. INTERACTIVE DOCUMENTATION & API METADATA
+###############################################################################
+
+### 3.1 Scalar API Reference UI (Open in browser: http://localhost:5112/scalar/v1)
+GET {{HostAddress}}/scalar/v1
+
+### 3.2 OpenAPI Specification JSON
+GET {{HostAddress}}/openapi/v1.json
+Accept: application/json

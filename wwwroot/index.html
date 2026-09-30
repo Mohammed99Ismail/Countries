@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countries & Cities Management API Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(51, 65, 85, 0.6);
+      --border: rgba(148, 163, 184, 0.12);
+      --border-focus: #6366f1;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      line-height: 1.5;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      border: 1px solid transparent;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-danger {
+      background: var(--danger-light);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.785rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    /* Navigation Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: var(--bg-surface);
+      padding: 0.35rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-inputs {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .input-field, .select-field {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.55rem 0.9rem;
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .input-field:focus, .select-field:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .input-field {
+      min-width: 220px;
+    }
+
+    /* Table Container */
+    .table-container {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.75);
+      padding: 0.9rem 1.25rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .badge-primary {
+      background: var(--primary-light);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* Actions Column */
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.5);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .pagination-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 520px;
+      padding: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .checkbox-group input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 2000;
+    }
+
+    .toast {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.25rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      animation: slideIn 0.3s ease;
+      font-size: 0.875rem;
+      max-width: 380px;
+    }
+
+    .toast-success { border-left: 4px solid var(--success); }
+    .toast-error { border-left: 4px solid var(--danger); }
+    .toast-info { border-left: 4px solid var(--primary); }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-inputs { flex-direction: column; align-items: stretch; }
+      .input-field { width: 100%; min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-group">
+        <div class="logo-badge">🌍</div>
+        <div>
+          <h1 class="brand-title">Countries & Cities API</h1>
+          <p class="brand-subtitle">High-performance RESTful Management Portal with Filtering & Pagination</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="/scalar/v1" target="_blank" class="btn btn-secondary">
+          <span>📖 Scalar Interactive Docs</span>
+        </a>
+        <a href="/openapi/v1.json" target="_blank" class="btn btn-secondary">
+          <span>⚙️ OpenAPI Spec</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Stats Section -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Countries</span>
+        <div class="stat-value" id="statCountries">-</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total Cities</span>
+        <div class="stat-value" id="statCities">-</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Continents Represented</span>
+        <div class="stat-value" id="statRegions">-</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total Tracked Population</span>
+        <div class="stat-value" id="statPopulation">-</div>
+      </div>
+    </div>
+
+    <!-- Tab navigation -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" id="tabCountriesBtn" onclick="switchTab('countries')">
+        <span>🗺️ Countries</span>
+      </button>
+      <button class="tab-btn" id="tabCitiesBtn" onclick="switchTab('cities')">
+        <span>🏙️ Cities</span>
+      </button>
+    </div>
+
+    <!-- COUNTRIES TAB CONTENT -->
+    <section id="countriesSection">
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-inputs">
+          <input type="text" id="countrySearch" class="input-field" placeholder="Search by country name or code..." oninput="debounce(loadCountries, 300)()">
+          <select id="countryRegionFilter" class="select-field" onchange="loadCountries()">
+            <option value="">All Regions</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Americas">Americas</option>
+            <option value="Africa">Africa</option>
+            <option value="Oceania">Oceania</option>
+          </select>
+          <select id="countrySortBy" class="select-field" onchange="loadCountries()">
+            <option value="name">Sort by Name</option>
+            <option value="isocode">Sort by ISO Code</option>
+            <option value="population">Sort by Population</option>
+            <option value="createdat">Sort by Date Created</option>
+          </select>
+          <select id="countrySortOrder" class="select-field" onchange="loadCountries()">
+            <option value="asc">Ascending ↑</option>
+            <option value="desc">Descending ↓</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateCountryModal()">
+          <span>+ Add Country</span>
+        </button>
+      </div>
+
+      <!-- Countries Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>ISO Code</th>
+              <th>Region</th>
+              <th>Phone</th>
+              <th>Currency</th>
+              <th>Population</th>
+              <th>Cities</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="countriesTableBody">
+            <tr><td colspan="9" style="text-align:center; padding: 2rem;">Loading countries...</td></tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-info" id="countriesPaginationInfo">Showing 0 of 0</div>
+          <div class="pagination-controls">
+            <button class="btn btn-secondary btn-sm" id="prevCountriesPageBtn" onclick="changeCountryPage(-1)">Previous</button>
+            <span id="countryCurrentPageDisplay" style="font-size:0.85rem; padding: 0 0.5rem;">Page 1</span>
+            <button class="btn btn-secondary btn-sm" id="nextCountriesPageBtn" onclick="changeCountryPage(1)">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITIES TAB CONTENT -->
+    <section id="citiesSection" style="display: none;">
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-inputs">
+          <input type="text" id="citySearch" class="input-field" placeholder="Search city or province..." oninput="debounce(loadCities, 300)()">
+          <select id="cityCountryFilter" class="select-field" onchange="loadCities()">
+            <option value="">All Countries</option>
+          </select>
+          <select id="cityCapitalFilter" class="select-field" onchange="loadCities()">
+            <option value="">All Types</option>
+            <option value="true">Capitals Only ⭐</option>
+            <option value="false">Non-Capitals</option>
+          </select>
+          <select id="citySortBy" class="select-field" onchange="loadCities()">
+            <option value="name">Sort by Name</option>
+            <option value="population">Sort by Population</option>
+            <option value="country">Sort by Country</option>
+            <option value="createdat">Sort by Date Created</option>
+          </select>
+          <select id="citySortOrder" class="select-field" onchange="loadCities()">
+            <option value="asc">Ascending ↑</option>
+            <option value="desc">Descending ↓</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateCityModal()">
+          <span>+ Add City</span>
+        </button>
+      </div>
+
+      <!-- Cities Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>City Name</th>
+              <th>Country</th>
+              <th>State / Province</th>
+              <th>Population</th>
+              <th>Type</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="citiesTableBody">
+            <tr><td colspan="7" style="text-align:center; padding: 2rem;">Loading cities...</td></tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-info" id="citiesPaginationInfo">Showing 0 of 0</div>
+          <div class="pagination-controls">
+            <button class="btn btn-secondary btn-sm" id="prevCitiesPageBtn" onclick="changeCityPage(-1)">Previous</button>
+            <span id="cityCurrentPageDisplay" style="font-size:0.85rem; padding: 0 0.5rem;">Page 1</span>
+            <button class="btn btn-secondary btn-sm" id="nextCitiesPageBtn" onclick="changeCityPage(1)">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- COUNTRY MODAL -->
+  <div class="modal-overlay" id="countryModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="countryModalTitle">Add Country</h3>
+        <button class="modal-close" onclick="closeModal('countryModal')">&times;</button>
+      </div>
+      <form id="countryForm" onsubmit="handleCountrySubmit(event)">
+        <input type="hidden" id="countryId">
+        <div class="form-group">
+          <label>Country Name *</label>
+          <input type="text" id="countryName" class="input-field" required placeholder="e.g. Switzerland">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>ISO Code (2-3 letters) *</label>
+            <input type="text" id="countryIso" class="input-field" maxlength="3" required placeholder="e.g. CHE">
+          </div>
+          <div class="form-group">
+            <label>Region / Continent *</label>
+            <select id="countryRegion" class="select-field" required>
+              <option value="Europe">Europe</option>
+              <option value="Asia">Asia</option>
+              <option value="Americas">Americas</option>
+              <option value="Africa">Africa</option>
+              <option value="Oceania">Oceania</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Phone Dial Code</label>
+            <input type="text" id="countryPhone" class="input-field" placeholder="e.g. +41">
+          </div>
+          <div class="form-group">
+            <label>Currency Code</label>
+            <input type="text" id="countryCurrency" class="input-field" maxlength="10" placeholder="e.g. CHF">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Population</label>
+          <input type="number" id="countryPopulation" class="input-field" min="0" placeholder="e.g. 8700000">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('countryModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="countrySubmitBtn">Save Country</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CITY MODAL -->
+  <div class="modal-overlay" id="cityModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="cityModalTitle">Add City</h3>
+        <button class="modal-close" onclick="closeModal('cityModal')">&times;</button>
+      </div>
+      <form id="cityForm" onsubmit="handleCitySubmit(event)">
+        <input type="hidden" id="cityId">
+        <div class="form-group">
+          <label>City Name *</label>
+          <input type="text" id="cityName" class="input-field" required placeholder="e.g. Zurich">
+        </div>
+        <div class="form-group">
+          <label>Belongs to Country *</label>
+          <select id="cityCountrySelect" class="select-field" required>
+            <option value="">Select a country...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>State / Province / Region</label>
+          <input type="text" id="cityState" class="input-field" placeholder="e.g. Canton of Zurich">
+        </div>
+        <div class="form-group">
+          <label>Population</label>
+          <input type="number" id="cityPopulation" class="input-field" min="0" placeholder="e.g. 430000">
+        </div>
+        <label class="checkbox-group">
+          <input type="checkbox" id="cityIsCapital">
+          <span>This is the capital city ⭐</span>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('cityModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="citySubmitBtn">Save City</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- COUNTRY DRILLDOWN CITIES MODAL -->
+  <div class="modal-overlay" id="countryCitiesModal">
+    <div class="modal" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="countryCitiesTitle">Cities in Country</h3>
+        <button class="modal-close" onclick="closeModal('countryCitiesModal')">&times;</button>
+      </div>
+      <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>City Name</th>
+              <th>Province</th>
+              <th>Population</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody id="countryCitiesTableBody">
+            <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-actions" style="margin-top: 1.5rem;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('countryCitiesModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // State
+    let countryCurrentPage = 1;
+    let countryPageSize = 8;
+    let cityCurrentPage = 1;
+    let cityPageSize = 8;
+    let allCountriesList = [];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStats();
+      loadCountries();
+      loadAllCountriesForSelect();
+    });
+
+    // Debounce helper
+    function debounce(func, delay) {
+      let timer;
+      return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    // Switch Tabs
+    function switchTab(tab) {
+      const isCountries = tab === 'countries';
+      document.getElementById('countriesSection').style.display = isCountries ? 'block' : 'none';
+      document.getElementById('citiesSection').style.display = isCountries ? 'none' : 'block';
+      document.getElementById('tabCountriesBtn').classList.toggle('active', isCountries);
+      document.getElementById('tabCitiesBtn').classList.toggle('active', !isCountries);
+      if (!isCountries) {
+        loadCities();
+      }
+    }
+
+    // Stats
+    async function loadStats() {
+      try {
+        const [countriesRes, citiesRes] = await Promise.all([
+          fetch('/api/countries?pageSize=100'),
+          fetch('/api/cities?pageSize=100')
+        ]);
+        const countries = await countriesRes.json();
+        const cities = await citiesRes.json();
+
+        document.getElementById('statCountries').textContent = countries.totalCount.toLocaleString();
+        document.getElementById('statCities').textContent = cities.totalCount.toLocaleString();
+
+        const regions = new Set(countries.items.map(c => c.region)).size;
+        document.getElementById('statRegions').textContent = regions;
+
+        const totalPop = countries.items.reduce((acc, c) => acc + (c.population || 0), 0);
+        document.getElementById('statPopulation').textContent = totalPop.toLocaleString();
+      } catch (err) {
+        console.error('Failed to load stats', err);
+      }
+    }
+
+    // Load Countries for Select inputs
+    async function loadAllCountriesForSelect() {
+      try {
+        const res = await fetch('/api/countries?pageSize=100&sortBy=name&sortOrder=asc');
+        const data = await res.json();
+        allCountriesList = data.items;
+
+        const cityCountryFilter = document.getElementById('cityCountryFilter');
+        const cityCountrySelect = document.getElementById('cityCountrySelect');
+
+        cityCountryFilter.innerHTML = '<option value="">All Countries</option>';
+        cityCountrySelect.innerHTML = '<option value="">Select a country...</option>';
+
+        data.items.forEach(c => {
+          const opt1 = document.createElement('option');
+          opt1.value = c.id;
+          opt1.textContent = `${c.name} (${c.isoCode})`;
+          cityCountryFilter.appendChild(opt1);
+
+          const opt2 = document.createElement('option');
+          opt2.value = c.id;
+          opt2.textContent = `${c.name} (${c.isoCode})`;
+          cityCountrySelect.appendChild(opt2);
+        });
+      } catch (e) {
+        console.error('Failed to load countries dropdown', e);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // COUNTRIES
+    // -------------------------------------------------------------
+    async function loadCountries() {
+      const search = document.getElementById('countrySearch').value;
+      const region = document.getElementById('countryRegionFilter').value;
+      const sortBy = document.getElementById('countrySortBy').value;
+      const sortOrder = document.getElementById('countrySortOrder').value;
+
+      const params = new URLSearchParams({
+        pageNumber: countryCurrentPage,
+        pageSize: countryPageSize,
+        sortBy,
+        sortOrder
+      });
+      if (search) params.append('search', search);
+      if (region) params.append('region', region);
+
+      try {
+        const res = await fetch(`/api/countries?${params.toString()}`);
+        if (!res.ok) throw new Error('Failed to fetch countries');
+        const data = await res.json();
+
+        const tbody = document.getElementById('countriesTableBody');
+        if (data.items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 2rem;">No countries found matching your criteria.</td></tr>';
+        } else {
+          tbody.innerHTML = data.items.map(c => `
+            <tr>
+              <td><span class="badge badge-primary">#${c.id}</span></td>
+              <td><strong>${escapeHtml(c.name)}</strong></td>
+              <td><span class="badge badge-primary">${escapeHtml(c.isoCode)}</span></td>
+              <td>${escapeHtml(c.region)}</td>
+              <td>${c.phoneCode ? escapeHtml(c.phoneCode) : '-'}</td>
+              <td>${c.currency ? `<span class="badge">${escapeHtml(c.currency)}</span>` : '-'}</td>
+              <td>${c.population ? c.population.toLocaleString() : '-'}</td>
+              <td>
+                <button class="btn btn-secondary btn-sm" onclick="viewCountryCities(${c.id}, '${escapeHtml(c.name)}')">
+                  🏙️ ${c.cityCount} cities
+                </button>
+              </td>
+              <td style="text-align: right;">
+                <div class="row-actions" style="justify-content: flex-end;">
+                  <button class="btn btn-secondary btn-sm" onclick="openEditCountryModal(${c.id})">Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteCountry(${c.id}, '${escapeHtml(c.name)}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+        }
+
+        // Pagination
+        const start = data.totalCount === 0 ? 0 : (data.pageNumber - 1) * data.pageSize + 1;
+        const end = Math.min(data.pageNumber * data.pageSize, data.totalCount);
+        document.getElementById('countriesPaginationInfo').textContent = `Showing ${start}-${end} of ${data.totalCount} countries`;
+        document.getElementById('countryCurrentPageDisplay').textContent = `Page ${data.pageNumber} of ${data.totalPages || 1}`;
+        document.getElementById('prevCountriesPageBtn').disabled = !data.hasPreviousPage;
+        document.getElementById('nextCountriesPageBtn').disabled = !data.hasNextPage;
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function changeCountryPage(delta) {
+      countryCurrentPage += delta;
+      loadCountries();
+    }
+
+    function openCreateCountryModal() {
+      document.getElementById('countryModalTitle').textContent = 'Add New Country';
+      document.getElementById('countryForm').reset();
+      document.getElementById('countryId').value = '';
+      openModal('countryModal');
+    }
+
+    async function openEditCountryModal(id) {
+      try {
+        const res = await fetch(`/api/countries/${id}`);
+        if (!res.ok) throw new Error('Country not found');
+        const c = await res.json();
+
+        document.getElementById('countryModalTitle').textContent = `Edit Country: ${c.name}`;
+        document.getElementById('countryId').value = c.id;
+        document.getElementById('countryName').value = c.name;
+        document.getElementById('countryIso').value = c.isoCode;
+        document.getElementById('countryRegion').value = c.region;
+        document.getElementById('countryPhone').value = c.phoneCode || '';
+        document.getElementById('countryCurrency').value = c.currency || '';
+        document.getElementById('countryPopulation').value = c.population || '';
+
+        openModal('countryModal');
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function handleCountrySubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('countryId').value;
+      const isEdit = Boolean(id);
+
+      const payload = {
+        name: document.getElementById('countryName').value.trim(),
+        isoCode: document.getElementById('countryIso').value.trim(),
+        region: document.getElementById('countryRegion').value,
+        phoneCode: document.getElementById('countryPhone').value.trim() || null,
+        currency: document.getElementById('countryCurrency').value.trim() || null,
+        population: document.getElementById('countryPopulation').value ? parseInt(document.getElementById('countryPopulation').value) : null
+      };
+
+      try {
+        const res = await fetch(isEdit ? `/api/countries/${id}` : '/api/countries', {
+          method: isEdit ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || 'Failed to save country');
+        }
+
+        closeModal('countryModal');
+        showToast(isEdit ? 'Country updated successfully!' : 'Country created successfully!', 'success');
+        loadCountries();
+        loadAllCountriesForSelect();
+        loadStats();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function deleteCountry(id, name) {
+      if (!confirm(`Are you sure you want to delete "${name}"? All associated cities will also be deleted.`)) return;
+
+      try {
+        const res = await fetch(`/api/countries/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete country');
+        showToast(`Country "${name}" deleted.`, 'info');
+        loadCountries();
+        loadAllCountriesForSelect();
+        loadStats();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // View Cities by Country ID (implements Get Cities by Country ID with pagination)
+    async function viewCountryCities(countryId, countryName) {
+      document.getElementById('countryCitiesTitle').textContent = `Cities in ${countryName}`;
+      const tbody = document.getElementById('countryCitiesTableBody');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading cities...</td></tr>';
+      openModal('countryCitiesModal');
+
+      try {
+        const res = await fetch(`/api/countries/${countryId}/cities?pageSize=50`);
+        if (!res.ok) throw new Error('Failed to load cities');
+        const data = await res.json();
+
+        if (data.items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No cities recorded for this country yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.items.map(c => `
+          <tr>
+            <td><span class="badge badge-primary">#${c.id}</span></td>
+            <td><strong>${escapeHtml(c.name)}</strong></td>
+            <td>${c.stateOrProvince ? escapeHtml(c.stateOrProvince) : '-'}</td>
+            <td>${c.population ? c.population.toLocaleString() : '-'}</td>
+            <td>${c.isCapital ? '<span class="badge badge-warning">Capital ⭐</span>' : '<span class="badge">Standard</span>'}</td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">${escapeHtml(e.message)}</td></tr>`;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CITIES
+    // -------------------------------------------------------------
+    async function loadCities() {
+      const search = document.getElementById('citySearch').value;
+      const countryId = document.getElementById('cityCountryFilter').value;
+      const isCapital = document.getElementById('cityCapitalFilter').value;
+      const sortBy = document.getElementById('citySortBy').value;
+      const sortOrder = document.getElementById('citySortOrder').value;
+
+      const params = new URLSearchParams({
+        pageNumber: cityCurrentPage,
+        pageSize: cityPageSize,
+        sortBy,
+        sortOrder
+      });
+      if (search) params.append('search', search);
+      if (countryId) params.append('countryId', countryId);
+      if (isCapital) params.append('isCapital', isCapital);
+
+      try {
+        const res = await fetch(`/api/cities?${params.toString()}`);
+        if (!res.ok) throw new Error('Failed to fetch cities');
+        const data = await res.json();
+
+        const tbody = document.getElementById('citiesTableBody');
+        if (data.items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 2rem;">No cities found matching your criteria.</td></tr>';
+        } else {
+          tbody.innerHTML = data.items.map(c => `
+            <tr>
+              <td><span class="badge badge-primary">#${c.id}</span></td>
+              <td><strong>${escapeHtml(c.name)}</strong></td>
+              <td><span class="badge badge-success">${escapeHtml(c.countryName)} (${escapeHtml(c.countryIsoCode)})</span></td>
+              <td>${c.stateOrProvince ? escapeHtml(c.stateOrProvince) : '-'}</td>
+              <td>${c.population ? c.population.toLocaleString() : '-'}</td>
+              <td>${c.isCapital ? '<span class="badge badge-warning">Capital ⭐</span>' : '<span class="badge">Standard</span>'}</td>
+              <td style="text-align: right;">
+                <div class="row-actions" style="justify-content: flex-end;">
+                  <button class="btn btn-secondary btn-sm" onclick="openEditCityModal(${c.id})">Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteCity(${c.id}, '${escapeHtml(c.name)}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+        }
+
+        // Pagination
+        const start = data.totalCount === 0 ? 0 : (data.pageNumber - 1) * data.pageSize + 1;
+        const end = Math.min(data.pageNumber * data.pageSize, data.totalCount);
+        document.getElementById('citiesPaginationInfo').textContent = `Showing ${start}-${end} of ${data.totalCount} cities`;
+        document.getElementById('cityCurrentPageDisplay').textContent = `Page ${data.pageNumber} of ${data.totalPages || 1}`;
+        document.getElementById('prevCitiesPageBtn').disabled = !data.hasPreviousPage;
+        document.getElementById('nextCitiesPageBtn').disabled = !data.hasNextPage;
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function changeCityPage(delta) {
+      cityCurrentPage += delta;
+      loadCities();
+    }
+
+    function openCreateCityModal() {
+      document.getElementById('cityModalTitle').textContent = 'Add New City';
+      document.getElementById('cityForm').reset();
+      document.getElementById('cityId').value = '';
+      openModal('cityModal');
+    }
+
+    async function openEditCityModal(id) {
+      try {
+        const res = await fetch(`/api/cities/${id}`);
+        if (!res.ok) throw new Error('City not found');
+        const c = await res.json();
+
+        document.getElementById('cityModalTitle').textContent = `Edit City: ${c.name}`;
+        document.getElementById('cityId').value = c.id;
+        document.getElementById('cityName').value = c.name;
+        document.getElementById('cityCountrySelect').value = c.countryId;
+        document.getElementById('cityState').value = c.stateOrProvince || '';
+        document.getElementById('cityPopulation').value = c.population || '';
+        document.getElementById('cityIsCapital').checked = c.isCapital;
+
+        openModal('cityModal');
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+    }
+
+    async function handleCitySubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('cityId').value;
+      const isEdit = Boolean(id);
+
+      const payload = {
+        name: document.getElementById('cityName').value.trim(),
+        countryId: parseInt(document.getElementById('cityCountrySelect').value),
+        stateOrProvince: document.getElementById('cityState').value.trim() || null,
+        population: document.getElementById('cityPopulation').value ? parseInt(document.getElementById('cityPopulation').value) : null,
+        isCapital: document.getElementById('cityIsCapital').checked
+      };
+
+      try {
+        const res = await fetch(isEdit ? `/api/cities/${id}` : '/api/cities', {
+          method: isEdit ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || 'Failed to save city');
+        }
+
+        closeModal('cityModal');
+        showToast(isEdit ? 'City updated successfully!' : 'City created successfully!', 'success');
+        loadCities();
+        loadCountries();
+        loadStats();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function deleteCity(id, name) {
+      if (!confirm(`Are you sure you want to delete the city "${name}"?`)) return;
+
+      try {
+        const res = await fetch(`/api/cities/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete city');
+        showToast(`City "${name}" deleted.`, 'info');
+        loadCities();
+        loadCountries();
+        loadStats();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    // Toast Helper
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
